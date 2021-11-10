@@ -11,7 +11,6 @@ public class DeathScreen : MonoBehaviour
     {
         playerRef = FindObjectOfType<Player>();
         playerRef.OnDeath += Show;
-        playerRef.OnReset += Hide;
         Hide();
     }
 

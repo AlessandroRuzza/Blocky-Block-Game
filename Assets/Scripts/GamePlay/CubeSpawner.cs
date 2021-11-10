@@ -16,7 +16,6 @@ public class CubeSpawner : MonoBehaviour
         maxScale = 2.5f;
         spawnPeriod = 0.5f;
         maxOffset = Camera.main.orthographicSize * Camera.main.aspect - minScale/2f; 
-        playerRef.OnReset += StartSpawner;
         if(SceneManager.GetActiveScene().name == "GamePlay")
             StartSpawner();
         else

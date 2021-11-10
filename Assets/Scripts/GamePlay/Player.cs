@@ -1,35 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
     public float speed, startScale, startFixedScale;
     public event System.Action OnReset, OnDamage, OnDeath, OnPause, OnResume; 
     public static int MAX_HEALTH=4, COIN_TARGET=5;
-    public int coinCounter, health;
+    int coinCounter=0, health=MAX_HEALTH;
+    public int hp { get {return health; } }
     public bool paused, pauseDone;
     public Vector3 resetPosition;
     float halfScreenWidth, halfScreenHeight;
     Vector3 move;
     void Start()
     {
-        resetPosition = transform.position;
         halfScreenWidth = Camera.main.orthographicSize * Camera.main.aspect + transform.localScale.x/2f;
         halfScreenHeight = Camera.main.orthographicSize - transform.localScale.y/2f;
         startScale = Time.timeScale;
         startFixedScale = Time.fixedDeltaTime;
-        Reset();
     }
-    public void Reset(){
-        transform.position = resetPosition;
-        Time.timeScale = startScale;
-        Time.fixedDeltaTime = startFixedScale;
-        health = MAX_HEALTH;
-        coinCounter=0;
+    public void Reset(){                        //TODO:  Fix the reset to SceneManager.LoadScene()
         if(OnReset != null)
             OnReset();
-        paused = false;
+        Time.timeScale = startScale;
+        Time.fixedDeltaTime = startFixedScale;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);   // reloads current scene
     }
     void Update()
     {
@@ -94,10 +91,9 @@ public class Player : MonoBehaviour
         }
     }
     void CheckObjectiveComplete(){
-        if(coinCounter >= COIN_TARGET){
+        if(coinCounter >= COIN_TARGET && !paused){
             print("CONGRATS!");
             Pause();
-            coinCounter = 0;
         }
     }
     public void Pause(float transitionTime=1f, int numStep=-50){

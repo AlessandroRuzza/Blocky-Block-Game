@@ -1,4 +1,4 @@
-﻿{
+{
     "files.exclude":
     {
         "**/.DS_Store":true,
@@ -43,10 +43,18 @@
         "**/*.meta":true,
         "**/*.prefab":true,
         "**/*.unity":true,
+        "**/*.phys*":true,          // user-made
+        "**/*.sln*":true,           // user-made
+        "**/*.csproj*":true,        // user-made
         "build/":true,
         "Build/":true,
         "Library/":true,
         "library/":true,
+        "Assets/Animations/":true,  // user-made
+        "Assets/Scenes/":true,      // user-made
+        "Logs/":true,               // user-made
+        "Packages/":true,           // user-made
+        "UserSettings/":true,       // user-made
         "obj/":true,
         "Obj/":true,
         "ProjectSettings/":true,

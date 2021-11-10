@@ -13,14 +13,14 @@ public class HealthBar : MonoBehaviour
         healthBar = gameObject.GetComponent<Slider>();
         playerRef = FindObjectOfType<Player>();
         playerRef.OnDamage += EmitDamage;
-        playerRef.OnReset += Reset;
+        healthBar.maxValue = Player.MAX_HEALTH;
     }
-    void Reset(){
+    public void Reset(){
         healthBar.maxValue = Player.MAX_HEALTH;
     }
     void Update()
     {
-        healthBar.value = playerRef.health;
+        healthBar.value = playerRef.hp;
     }
 
     void EmitDamage(){
