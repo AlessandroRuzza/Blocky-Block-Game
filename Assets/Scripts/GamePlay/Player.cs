@@ -5,12 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
-    public float speed, startScale, startFixedScale;
+    TimeUtils timeUtils;
+    public float speed;
     public event System.Action OnReset, OnDamage, OnDeath, OnPause, OnResume; 
     public static int MAX_HEALTH=4, COIN_TARGET=5;
     int coinCounter=0, health=MAX_HEALTH;
     public int hp { get {return health; } }
-    public bool paused, pauseDone;
     public Vector3 resetPosition;
     float halfScreenWidth, halfScreenHeight;
     Vector3 move;
@@ -18,14 +18,13 @@ public class Player : MonoBehaviour
     {
         halfScreenWidth = Camera.main.orthographicSize * Camera.main.aspect + transform.localScale.x/2f;
         halfScreenHeight = Camera.main.orthographicSize - transform.localScale.y/2f;
-        startScale = Time.timeScale;
-        startFixedScale = Time.fixedDeltaTime;
+        TimeUtils.startScale = Time.timeScale;
+        TimeUtils.startFixedScale = Time.fixedDeltaTime;
     }
     public void Reset(){                        //TODO:  Fix the reset to SceneManager.LoadScene()
         if(OnReset != null)
             OnReset();
-        Time.timeScale = startScale;
-        Time.fixedDeltaTime = startFixedScale;
+        timeUtils.ResetTime();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);   // reloads current scene
     }
     void Update()
@@ -86,7 +85,7 @@ public class Player : MonoBehaviour
     }
     void CheckDeath(){
         if(!IsAlive()){
-            Pause();
+            timeUtils.Pause();
             if(OnDeath != null) OnDeath();
         }
     }
@@ -94,58 +93,15 @@ public class Player : MonoBehaviour
         if(coinCounter >= COIN_TARGET && !paused){
             print("CONGRATS!");
             Pause();
-        }
-    }
-    public void Pause(float transitionTime=1f, int numStep=-50){
-        StopCoroutine("TimeTransition");
-        paused = true;
-        StartCoroutine(TimeTransition(numStep, transitionTime));
-    }
-    public void Resume(float transitionTime=1f, int numStep=250){
-        StopCoroutine("TimeTransition");
-        paused = false;
-        StartCoroutine(TimeTransition(numStep, transitionTime));
-    }
-    IEnumerator TimeTransition(int numStep, float transitionTime){
-        float stepTime = Mathf.Abs(transitionTime/numStep);  // transitionSeconds / steps = interval between steps
-        float stepSize = startScale/numStep;            // is negative for pausing, positive for unpausing
-        float stepFixedSize = startFixedScale/numStep;  // is negative for pausing, positive for unpausing
-
-        for(int i=0; i<Mathf.Abs(numStep); i++){
-            Time.timeScale += stepSize;
-            Time.fixedDeltaTime += stepFixedSize;
-            //print("Scaled: " + Time.timeScale + " Fixed: " + Time.fixedDeltaTime); debug
-            yield return new WaitForSecondsRealtime(stepTime);
-        }
-        if(numStep>0){
-            Time.timeScale = startScale;
-            Time.fixedDeltaTime = startFixedScale;
-            pauseDone=false;
-            if(OnResume != null) OnResume();
-        }
-        else{
-            Time.timeScale = 0;
-            Time.fixedDeltaTime = 0;
-            pauseDone=true;
             if(OnPause != null) OnPause();
         }
     }
 
-    /* FRAME BASED PAUSE (laggy cubes)
-
-    void gradualPause(){
-        const float smoothSeconds = 1f;
-        float pauseSpeed = startScale/smoothSeconds;
-        float reduceBy = pauseSpeed*Time.deltaTime;
-
-        if(Time.timeScale > reduceBy)
-            Time.timeScale -= reduceBy;
-        else{
-            Time.timeScale = 0;
-            paused = false; 
-            print("Done");
-        }
+    void Pause(){
+        timeUtils.Pause();
+        if(OnPause != null) OnPause();
     }
-    */
+
+    
 
 }
