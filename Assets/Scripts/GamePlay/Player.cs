@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+struct screenBounds{
+    public static float x;
+    public static float y;
+}
 public class Player : MonoBehaviour
 {
     public float speed;
@@ -11,12 +15,11 @@ public class Player : MonoBehaviour
     int coinCounter=0, health=MAX_HEALTH;
     public int hp { get {return health; } }
     public Vector3 resetPosition;
-    float halfScreenWidth, halfScreenHeight;
     Vector3 move;
     void Start()
     {
-        halfScreenWidth = CameraUtils.halfWidth + transform.localScale.x/2f;
-        halfScreenHeight = CameraUtils.halfHeight - transform.localScale.y/2f;
+        screenBounds.x = CameraUtils.halfWidth + transform.localScale.x/2f;
+        screenBounds.y = CameraUtils.halfHeight - transform.localScale.y/2f;
     }
     public void Reset(){                        //TODO:  Fix the reset to SceneManager.LoadScene()
         if(OnReset != null)
@@ -52,15 +55,15 @@ public class Player : MonoBehaviour
         transform.position += move*Time.deltaTime;
     }
     void CheckLoopAround(){
-        if(transform.position.x < -halfScreenWidth)
-            transform.position = new Vector3(halfScreenWidth, transform.position.y);
-        else if(transform.position.x > halfScreenWidth)
-            transform.position = new Vector3(-halfScreenWidth, transform.position.y);
+        if(transform.position.x < -screenBounds.x)
+            transform.position = new Vector3(screenBounds.x, transform.position.y);
+        else if(transform.position.x > screenBounds.x)
+            transform.position = new Vector3(-screenBounds.x, transform.position.y);
 
-        if(transform.position.y < -halfScreenHeight)
-            transform.position = new Vector3(transform.position.x, -halfScreenHeight);
-        else if(transform.position.y > halfScreenHeight)
-            transform.position = new Vector3(transform.position.x, halfScreenHeight);
+        if(transform.position.y < -screenBounds.y)
+            transform.position = new Vector3(transform.position.x, -screenBounds.y);
+        else if(transform.position.y > screenBounds.y)
+            transform.position = new Vector3(transform.position.x, screenBounds.y);
     }
     void OnTriggerEnter2D(Collider2D triggerCollider){
         if(triggerCollider.tag == "Cube" && IsAlive()){

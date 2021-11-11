@@ -12,6 +12,13 @@ public static class TimeUtils
     public static void ResetTime(){
         Time.timeScale = startScale;
         Time.fixedDeltaTime = startFixedScale;
+        paused = false;
+        pauseDone = false;
+    }
+    public static void SetTimeScales(float timeScale, float fixedDeltaTime){
+        startScale = timeScale;
+        startFixedScale = fixedDeltaTime;
+        ResetTime();
     }
     public static IEnumerator Pause(float transitionTime=1f){
         paused = true;
