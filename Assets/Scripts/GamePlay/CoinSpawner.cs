@@ -16,21 +16,22 @@ using UnityEngine;
 public class CoinSpawner : MonoBehaviour
 {
     public GameObject coinRoot;
-    public Player playerRef;
+    Player playerRef;
     float maxOffsetX, maxOffsetY;
     void Start()
     {  
+        playerRef = GameObject.FindObjectOfType<Player>();
         // whole coin must be within the camera
         maxOffsetX = CameraUtils.halfWidth - coinRoot.transform.localScale.x;
         maxOffsetY = CameraUtils.halfHeight - coinRoot.transform.localScale.y;
         InvokeRepeating("SpawnCoin", 3, 2); // starts spawning 3s after start of round, then once every 2s
+        playerRef.OnDeath += CancelInvoke;
+        playerRef.OnObjectiveReached += CancelInvoke;
     }
-
     void Update()
     {
-        
-    }
 
+    }
     void SpawnCoin(){
         Vector3 spawnPoint = transform.position + RandomSpawnOffset();
         // then check if spawnPoint is over UI element

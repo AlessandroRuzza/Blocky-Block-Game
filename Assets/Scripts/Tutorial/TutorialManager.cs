@@ -15,7 +15,7 @@ using System;
 *********/
 public class TutorialManager : MonoBehaviour
 {
-    public Action<int> OnAdvance;
+    Action<int> OnAdvance;
     /* Possible arguments
         
         0:  Indicate HealthBar and Player

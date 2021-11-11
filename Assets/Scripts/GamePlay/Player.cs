@@ -10,10 +10,10 @@ struct screenBounds{
 public class Player : MonoBehaviour
 {
     public float speed;
-    public event System.Action OnReset, OnDamage, OnDeath; 
+    public event System.Action OnReset, OnDamage, OnDeath, OnObjectiveReached; 
     public static int MAX_HEALTH=4, COIN_TARGET=5;
     int coinCounter=0, health=MAX_HEALTH;
-    public int hp { get {return health; } }
+    public int hp { get { return health; } }
     public Vector3 resetPosition;
     void Start()
     {
@@ -45,6 +45,7 @@ public class Player : MonoBehaviour
         OnReset=null;
         OnDamage=null;
         OnDeath=null;
+        OnObjectiveReached=null;
     }
     void HandleMovement(float speed){
         Vector3 move;
@@ -73,7 +74,7 @@ public class Player : MonoBehaviour
                 OnDamage();
             Destroy(triggerCollider.gameObject);
         }
-        else if(triggerCollider.tag == "Coin"){
+        else if(triggerCollider.tag == "Coin" && coinCounter < COIN_TARGET){
             print("coin!");
             coinCounter++;
             Destroy(triggerCollider.gameObject);
@@ -92,6 +93,7 @@ public class Player : MonoBehaviour
         if(coinCounter >= COIN_TARGET && !TimeUtils.isPaused){
             print("CONGRATS!");
             StartCoroutine(TimeUtils.Pause());
+            if(OnObjectiveReached != null) OnObjectiveReached();
         }
     }
 }
