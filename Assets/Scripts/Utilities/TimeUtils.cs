@@ -27,7 +27,7 @@ public static class TimeUtils
         float stepSize = startScale/numStep;            
         float stepFixedSize = startFixedScale/numStep;  
 
-        OnPause();
+        if(OnPause != null) OnPause();
         for(int i=0; i<numStep; i++){
             Time.timeScale -= stepSize;
             Time.fixedDeltaTime -= stepFixedSize;
@@ -45,7 +45,7 @@ public static class TimeUtils
         float stepSize = startScale/numStep;            
         float stepFixedSize = startFixedScale/numStep; 
 
-        OnResume();
+        if(OnResume != null) OnResume();
         for(int i=0; i<numStep; i++){
             Time.timeScale += stepSize;
             Time.fixedDeltaTime += stepFixedSize;

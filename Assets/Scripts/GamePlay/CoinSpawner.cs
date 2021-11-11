@@ -28,7 +28,7 @@ public class CoinSpawner : MonoBehaviour
 
     void Update()
     {
-
+        
     }
 
     void SpawnCoin(){

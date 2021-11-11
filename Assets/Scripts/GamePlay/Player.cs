@@ -15,9 +15,9 @@ public class Player : MonoBehaviour
     int coinCounter=0, health=MAX_HEALTH;
     public int hp { get {return health; } }
     public Vector3 resetPosition;
-    Vector3 move;
     void Start()
     {
+        CameraUtils.SetScreenDimension(); // DEBUG
         screenBounds.x = CameraUtils.halfWidth + transform.localScale.x/2f;
         screenBounds.y = CameraUtils.halfHeight - transform.localScale.y/2f;
     }
@@ -47,6 +47,7 @@ public class Player : MonoBehaviour
         OnDeath=null;
     }
     void HandleMovement(float speed){
+        Vector3 move;
         if(Input.GetKey(KeyCode.LeftShift))
             speed *= 2;
         move = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
@@ -83,17 +84,14 @@ public class Player : MonoBehaviour
     }
     void CheckDeath(){
         if(!IsAlive()){
-            Pause();
+            StartCoroutine(TimeUtils.Pause());
             if(OnDeath != null) OnDeath();
         }
     }
     void CheckObjectiveComplete(){
         if(coinCounter >= COIN_TARGET && !TimeUtils.isPaused){
             print("CONGRATS!");
-            Pause();
+            StartCoroutine(TimeUtils.Pause());
         }
-    }
-    void Pause(){
-        StartCoroutine(TimeUtils.Pause());
     }
 }

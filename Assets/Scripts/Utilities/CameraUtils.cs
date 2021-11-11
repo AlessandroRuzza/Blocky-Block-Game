@@ -12,4 +12,7 @@ public static class CameraUtils
         halfScreenHeight = Camera.main.orthographicSize;
         halfScreenWidth = Camera.main.orthographicSize * Camera.main.aspect;
     }
+    public static new string ToString(){
+        return "Height: " + halfHeight + "Width: " + halfWidth;
+    }
 }
