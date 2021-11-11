@@ -7,9 +7,6 @@ using System;
 
 public class SceneChanger : MonoBehaviour {
     public static event Action OnPlay, OnTutorial, OnQuit, OnTitleScreen;
-    void Start(){
-        //DontDestroyOnLoad(gameObject);
-    }
     public static void ChangeScene(string name){
         TimeUtils.ResetTime();
         switch(name){
@@ -22,12 +19,12 @@ public class SceneChanger : MonoBehaviour {
             case "TitleScreen":
                 if(OnTitleScreen != null) OnTitleScreen();
                 break;
-
             default: print("Nome scena errato:  " + name);  // DEBUG
                 break;
         }
         
         SceneManager.LoadScene(name);
+        CameraUtils.SetScreenDimension();
     }
     public static void Quit(){
         if(OnQuit != null) OnQuit();

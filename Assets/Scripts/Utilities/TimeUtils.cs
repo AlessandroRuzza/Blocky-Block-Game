@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 public static class TimeUtils
 {
     static bool paused, pauseDone;
+    public static event Action OnPause, OnResume;
     static float startScale=1f, startFixedScale=0.02f;
     public static bool isPaused { get{ return paused; }}
     public static bool isPauseDone { get{ return pauseDone; }}
@@ -18,6 +20,7 @@ public static class TimeUtils
         float stepSize = startScale/numStep;            
         float stepFixedSize = startFixedScale/numStep;  
 
+        OnPause();
         for(int i=0; i<numStep; i++){
             Time.timeScale -= stepSize;
             Time.fixedDeltaTime -= stepFixedSize;
@@ -35,6 +38,7 @@ public static class TimeUtils
         float stepSize = startScale/numStep;            
         float stepFixedSize = startFixedScale/numStep; 
 
+        OnResume();
         for(int i=0; i<numStep; i++){
             Time.timeScale += stepSize;
             Time.fixedDeltaTime += stepFixedSize;

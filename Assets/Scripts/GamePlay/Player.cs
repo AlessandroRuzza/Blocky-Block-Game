@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour
 {
     public float speed;
-    public event System.Action OnReset, OnDamage, OnDeath, OnPause, OnResume; 
+    public event System.Action OnReset, OnDamage, OnDeath; 
     public static int MAX_HEALTH=4, COIN_TARGET=5;
     int coinCounter=0, health=MAX_HEALTH;
     public int hp { get {return health; } }
@@ -15,8 +15,8 @@ public class Player : MonoBehaviour
     Vector3 move;
     void Start()
     {
-        halfScreenWidth = Camera.main.orthographicSize * Camera.main.aspect + transform.localScale.x/2f;
-        halfScreenHeight = Camera.main.orthographicSize - transform.localScale.y/2f;
+        halfScreenWidth = CameraUtils.halfWidth + transform.localScale.x/2f;
+        halfScreenHeight = CameraUtils.halfHeight - transform.localScale.y/2f;
     }
     public void Reset(){                        //TODO:  Fix the reset to SceneManager.LoadScene()
         if(OnReset != null)
@@ -42,8 +42,6 @@ public class Player : MonoBehaviour
         OnReset=null;
         OnDamage=null;
         OnDeath=null;
-        OnPause= null;
-        OnResume= null;
     }
     void HandleMovement(float speed){
         if(Input.GetKey(KeyCode.LeftShift))
@@ -90,11 +88,9 @@ public class Player : MonoBehaviour
         if(coinCounter >= COIN_TARGET && !TimeUtils.isPaused){
             print("CONGRATS!");
             Pause();
-            if(OnPause != null) OnPause();
         }
     }
     void Pause(){
         StartCoroutine(TimeUtils.Pause());
-        if(OnPause != null) OnPause();
     }
 }
