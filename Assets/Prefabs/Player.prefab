@@ -98,13 +98,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 6
-  startScale: 0
-  startFixedScale: 0
-  coinCounter: 0
-  health: 0
-  paused: 0
-  pauseDone: 0
   resetPosition: {x: 0, y: -11.77, z: 0}
+  coinPick: {fileID: 8300000, guid: 69f90a94b09fe0d4db9dc80a5379c8b3, type: 3}
 --- !u!70 &3231709053213128447
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
