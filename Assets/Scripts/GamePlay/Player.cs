@@ -17,7 +17,7 @@ public class Player : MonoBehaviour
     public Vector3 resetPosition;
     void Start()
     {
-        CameraUtils.SetScreenDimension(); // DEBUG
+        //CameraUtils.SetScreenDimension(); // DEBUG
         screenBounds.x = CameraUtils.halfWidth + transform.localScale.x/2f;
         screenBounds.y = CameraUtils.halfHeight - transform.localScale.y/2f;
     }

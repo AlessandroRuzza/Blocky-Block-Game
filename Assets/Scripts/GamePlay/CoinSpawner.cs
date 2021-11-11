@@ -27,6 +27,8 @@ public class CoinSpawner : MonoBehaviour
         InvokeRepeating("SpawnCoin", 3, 2); // starts spawning 3s after start of round, then once every 2s
         playerRef.OnDeath += CancelInvoke;
         playerRef.OnObjectiveReached += CancelInvoke;
+        
+        Debug.Log("X: " + maxOffsetX + " Y: " + maxOffsetY); //DEBUG
     }
     void Update()
     {
