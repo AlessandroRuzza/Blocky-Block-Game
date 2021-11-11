@@ -5,7 +5,7 @@ using UnityEngine;
 public static class TimeUtils
 {
     static bool paused, pauseDone;
-    public static event Action OnPause, OnResume;
+    public static event Action OnPause, OnResume, OnReset;
     static float startScale=1f, startFixedScale=0.02f;
     static float stepTime = 0.02f;       
     public static bool isPaused { get{ return paused; }}
@@ -15,6 +15,7 @@ public static class TimeUtils
         Time.fixedDeltaTime = startFixedScale;
         paused = false;
         pauseDone = false;
+        if(OnReset != null) OnReset();
     }
     public static void SetTimeScales(float timeScale, float fixedDeltaTime){
         startScale = timeScale;

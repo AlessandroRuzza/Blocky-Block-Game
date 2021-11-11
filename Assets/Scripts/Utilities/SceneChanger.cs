@@ -25,7 +25,10 @@ public class SceneChanger : MonoBehaviour {
         
         SceneManager.LoadScene(name);
         CameraUtils.SetScreenDimension();
-        print(CameraUtils.ToString());
+    }
+    public static void ReloadCurrentScene(){
+        Scene currentScene = SceneManager.GetActiveScene();
+        ChangeScene(currentScene.name);
     }
     public static void Quit(){
         if(OnQuit != null) OnQuit();

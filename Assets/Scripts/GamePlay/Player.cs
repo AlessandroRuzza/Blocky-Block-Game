@@ -12,20 +12,22 @@ public class Player : MonoBehaviour
     public float speed;
     public event System.Action OnReset, OnDamage, OnDeath, OnObjectiveReached, OnCoinPickup; 
     public static int MAX_HEALTH=4, COIN_TARGET=5;
-    int coinCounter=0, health=MAX_HEALTH;
+    int coinCounter, health;
     public int hp { get { return health; } }
     public Vector3 resetPosition;
-    void Start()
+    void Awake()
     {
-        //CameraUtils.SetScreenDimension(); // DEBUG
+        coinCounter=0;
+        health=MAX_HEALTH;
         screenBounds.x = CameraUtils.halfWidth + transform.localScale.x/2f;
         screenBounds.y = CameraUtils.halfHeight - transform.localScale.y/2f;
+        TimeUtils.OnReset += Reset;
     }
-    public void Reset(){                        //TODO:  Fix the reset to SceneManager.LoadScene()
+    public void Reset(){                        
+        coinCounter=0;
+        health=MAX_HEALTH;
         if(OnReset != null)
             OnReset();
-        TimeUtils.ResetTime();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);   // reloads current scene
     }
     void Update()
     {
@@ -38,10 +40,10 @@ public class Player : MonoBehaviour
         }
         // reset on R pressed   ------------  TEMP DEBUG
         if(Input.GetKeyDown(KeyCode.R)){
-            Reset();  
+            SceneChanger.ReloadCurrentScene();  
         }
     }
-    void OnDisable(){
+    void OnDestroy(){
         OnReset=null;
         OnDamage=null;
         OnDeath=null;
@@ -77,7 +79,7 @@ public class Player : MonoBehaviour
         }
         else if(triggerCollider.tag == "Coin" && coinCounter < COIN_TARGET){
             if(OnCoinPickup != null) OnCoinPickup();
-            print("coin!");
+            print("coin! " + coinCounter);
             coinCounter++;
             Destroy(triggerCollider.gameObject);
         }
