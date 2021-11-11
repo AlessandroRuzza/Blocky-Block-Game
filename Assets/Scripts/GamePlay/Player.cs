@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
-    TimeUtils timeUtils;
     public float speed;
     public event System.Action OnReset, OnDamage, OnDeath, OnPause, OnResume; 
     public static int MAX_HEALTH=4, COIN_TARGET=5;
@@ -18,13 +17,11 @@ public class Player : MonoBehaviour
     {
         halfScreenWidth = Camera.main.orthographicSize * Camera.main.aspect + transform.localScale.x/2f;
         halfScreenHeight = Camera.main.orthographicSize - transform.localScale.y/2f;
-        TimeUtils.startScale = Time.timeScale;
-        TimeUtils.startFixedScale = Time.fixedDeltaTime;
     }
     public void Reset(){                        //TODO:  Fix the reset to SceneManager.LoadScene()
         if(OnReset != null)
             OnReset();
-        timeUtils.ResetTime();
+        TimeUtils.ResetTime();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);   // reloads current scene
     }
     void Update()
@@ -32,7 +29,7 @@ public class Player : MonoBehaviour
         // Handle Player Events
         HandleMovement(speed);
         CheckLoopAround();
-        if(!paused){
+        if(!TimeUtils.isPaused){
             CheckDeath();
             CheckObjectiveComplete();
         }
@@ -85,23 +82,19 @@ public class Player : MonoBehaviour
     }
     void CheckDeath(){
         if(!IsAlive()){
-            timeUtils.Pause();
+            Pause();
             if(OnDeath != null) OnDeath();
         }
     }
     void CheckObjectiveComplete(){
-        if(coinCounter >= COIN_TARGET && !paused){
+        if(coinCounter >= COIN_TARGET && !TimeUtils.isPaused){
             print("CONGRATS!");
             Pause();
             if(OnPause != null) OnPause();
         }
     }
-
     void Pause(){
-        timeUtils.Pause();
+        StartCoroutine(TimeUtils.Pause());
         if(OnPause != null) OnPause();
     }
-
-    
-
 }

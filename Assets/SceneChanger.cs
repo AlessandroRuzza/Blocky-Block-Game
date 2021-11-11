@@ -11,6 +11,7 @@ public class SceneChanger : MonoBehaviour {
         //DontDestroyOnLoad(gameObject);
     }
     public static void ChangeScene(string name){
+        TimeUtils.ResetTime();
         switch(name){
             case "GamePlay":
                 if(OnPlay != null) OnPlay();

@@ -88,19 +88,19 @@ public class TutorialManager : MonoBehaviour
     }
     IEnumerator CubeTestPassed(){
         warningTextRef.SetTrigger("fadeOut");
-        playerRef.Pause();
+        StartCoroutine(TimeUtils.Pause());
         cubeTestPassedAnimator.SetTrigger("fadeIn");
         while(!Input.GetKeyDown(KeyCode.Space)){   
             yield return null;
         }
         cubeTestPassedAnimator.SetTrigger("fadeOut");
-        playerRef.Resume();
+        StartCoroutine(TimeUtils.Resume());
     }
     void OnFirstDamage(){
         if(!hasBeenDamaged){
             hasBeenDamaged = true;  
             playerRef.OnDamage -= OnFirstDamage;
-            playerRef.Pause(0.5f);
+            StartCoroutine(TimeUtils.Pause(0.5f));
             firstDamageGuideRef.alpha = 1f;
             firstDamageGuideRef.interactable = true;
             firstDamageGuideRef.blocksRaycasts = true;
@@ -114,7 +114,7 @@ public class TutorialManager : MonoBehaviour
         firstDamageGuideRef.alpha = 0f;
         firstDamageGuideRef.interactable = false;
         firstDamageGuideRef.blocksRaycasts = false;
-        playerRef.Resume();
+        StartCoroutine(TimeUtils.Resume());
     }
     void StartSpawner(int state){
         if(state == 2 && !tutorialSpawnerRef.isSpawning){    // on wrong state => exit function
