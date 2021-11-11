@@ -11,7 +11,8 @@ public class Player : MonoBehaviour
 {
     public float speed;
     public bool isImmortal;
-    public event System.Action OnReset, OnDamage, OnDeath, OnObjectiveReached, OnCoinPickup; 
+    public event System.Action OnReset, OnDamage, OnDeath, OnObjectiveReached;
+    public event System.Action<int> OnCoinPickup; 
     public static int MAX_HEALTH=4, COIN_TARGET=5;
     int coinCounter, health;
     public int hp { get { return health; } }
@@ -81,9 +82,9 @@ public class Player : MonoBehaviour
             Destroy(triggerCollider.gameObject);
         }
         else if(triggerCollider.tag == "Coin" && coinCounter < COIN_TARGET){
-            if(OnCoinPickup != null) OnCoinPickup();
-            print("coin! " + coinCounter);
             coinCounter++;
+            if(OnCoinPickup != null) OnCoinPickup(coinCounter);
+            print("coin! " + coinCounter);
             Destroy(triggerCollider.gameObject);
         }
     }

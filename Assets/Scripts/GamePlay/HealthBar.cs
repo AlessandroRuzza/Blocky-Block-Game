@@ -16,7 +16,7 @@ public class HealthBar : MonoBehaviour
         healthBar.maxValue = Player.MAX_HEALTH;
     }
     public void Reset(){
-        healthBar.maxValue = Player.MAX_HEALTH;
+        healthBar.value = healthBar.maxValue;
     }
     void Update()
     {

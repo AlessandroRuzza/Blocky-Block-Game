@@ -123,7 +123,7 @@ public class TutorialManager : MonoBehaviour
             tutorialSpawnerRef.StopSpawner();
         }
     }
-    void PickedCoin(){
+    void PickedCoin(int coinC=0){   // param needed to add to Player's OnCoinPickup action
         AudioSource audio = gameObject.AddComponent<AudioSource>();
         audio.PlayOneShot(pickupSound);
         playerRef.Kill();
