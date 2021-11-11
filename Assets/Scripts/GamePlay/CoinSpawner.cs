@@ -45,7 +45,8 @@ public class CoinSpawner : MonoBehaviour
         Vector3 position = new Vector3(offsetX, offsetY);
         return position;   
     }
-    public void PlayPickupSound(){
+    public void PlayPickupSound(int coinCount){
         audio.PlayOneShot(pickupSound);
+        // sound goes higher pitch on more coins?
     }
 }
