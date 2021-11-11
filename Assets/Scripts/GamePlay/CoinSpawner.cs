@@ -29,13 +29,13 @@ public class CoinSpawner : MonoBehaviour
         playerRef.OnCoinPickup += PlayPickupSound;
         audio = gameObject.GetComponent<AudioSource>();
         maxOffsetX = CameraUtils.halfWidth - coinRoot.transform.localScale.x;
-        maxOffsetY = CameraUtils.halfHeight - coinRoot.transform.localScale.y;
+        maxOffsetY = CameraUtils.halfHeight - 2; // will avoid coins overlapping CoinCounter
         InvokeRepeating("SpawnCoin", 3, 2); // starts spawning 3s after start of round, then once every 2s
         playerRef.OnDeath += CancelInvoke;
         playerRef.OnObjectiveReached += CancelInvoke;
     }
     void SpawnCoin(){
-        if(coinsOnScreen >= MAX_COINS_ON_SCREEN){
+        if(coinsOnScreen <= MAX_COINS_ON_SCREEN){
             Vector3 spawnPoint = transform.position + RandomSpawnOffset();
             // then check if spawnPoint is over UI element
             Vector3 distanceToHealthBar = healthBarRef.transform.position - spawnPoint;

@@ -98,8 +98,8 @@ public class Player : MonoBehaviour
     }
     void CheckObjectiveComplete(){
         if(coinCounter >= COIN_TARGET && !TimeUtils.isPaused && IsAlive()){
-            print("CONGRATS!");
-            StartCoroutine(TimeUtils.Pause());
+            //print("CONGRATS!");
+            isImmortal = true;
             if(OnObjectiveReached != null) OnObjectiveReached();
         }
     }

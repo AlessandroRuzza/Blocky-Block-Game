@@ -30,7 +30,6 @@ public class HealthBar : MonoBehaviour
     void EmitDamage(){
         damageEmitter.Play();
     }
-
     void PlayDamageSound(){
         audio.PlayOneShot(damageSound);
     }
