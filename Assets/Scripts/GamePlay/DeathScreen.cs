@@ -19,13 +19,13 @@ public class DeathScreen : MonoBehaviour
         obj.alpha = 1f;
         obj.interactable = true;
         obj.blocksRaycasts = true;
-        healthBar.SetActive(false);
+        healthBar.transform.localScale = Vector3.zero; // hide bar without turning off
     }
     void Hide(){
         CanvasGroup obj = gameObject.GetComponent<CanvasGroup>();
         obj.alpha = 0f;
         obj.interactable = false;
         obj.blocksRaycasts = false;
-        healthBar.SetActive(true);
+        healthBar.transform.localScale = Vector3.one; // reset healthBar scale
     }
 }

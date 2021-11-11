@@ -2730,7 +2730,7 @@ MonoBehaviour:
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
-    m_LineSpacing: 1.5
+    m_LineSpacing: 1.2
   m_Text: "Ouch! You just took damage!\nYou should *avoid* the \nblocks in the future
     :)"
 --- !u!222 &1845129408

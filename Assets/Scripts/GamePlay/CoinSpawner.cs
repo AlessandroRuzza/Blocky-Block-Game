@@ -16,13 +16,15 @@ using UnityEngine;
 public class CoinSpawner : MonoBehaviour
 {
     public GameObject coinRoot;
-    public static int coinsOnScreen;
+    public GameObject healthBarRef;
+    public static int coinsOnScreen, MAX_COINS_ON_SCREEN=12;
     Player playerRef;
     new AudioSource audio;
     public AudioClip pickupSound;
     float maxOffsetX, maxOffsetY;
     void Start()
     {  
+        coinsOnScreen = 0;
         playerRef = GameObject.FindObjectOfType<Player>();
         playerRef.OnCoinPickup += PlayPickupSound;
         audio = gameObject.GetComponent<AudioSource>();
@@ -33,10 +35,24 @@ public class CoinSpawner : MonoBehaviour
         playerRef.OnObjectiveReached += CancelInvoke;
     }
     void SpawnCoin(){
-        Vector3 spawnPoint = transform.position + RandomSpawnOffset();
-        // then check if spawnPoint is over UI element
+        if(coinsOnScreen >= MAX_COINS_ON_SCREEN){
+            Vector3 spawnPoint = transform.position + RandomSpawnOffset();
+            // then check if spawnPoint is over UI element
+            Vector3 distanceToHealthBar = healthBarRef.transform.position - spawnPoint;
+            float minDistX=2, minDistY=5;
+            if(distanceToHealthBar.x < minDistX && distanceToHealthBar.y < minDistY){
+                spawnPoint += Vector3.left*minDistX;
+            }
+            // check if spawnPoint is too close to player
+            Vector3 distanceToPlayer = playerRef.transform.position - spawnPoint;
+            float minDistance = 10;
+            if(distanceToPlayer.magnitude < minDistance){
+                spawnPoint += distanceToPlayer.normalized * minDistance;
+            }
 
-        GameObject coinHandle = Instantiate<GameObject>(coinRoot, spawnPoint, Quaternion.identity);
+            GameObject coinHandle = Instantiate<GameObject>(coinRoot, spawnPoint, Quaternion.identity);
+            coinsOnScreen++;
+        }
     }
     Vector3 RandomSpawnOffset(){        
         float offsetX = Random.Range(-maxOffsetX, maxOffsetX);
@@ -46,6 +62,7 @@ public class CoinSpawner : MonoBehaviour
         return position;   
     }
     public void PlayPickupSound(int coinCount){
+        coinsOnScreen--;
         audio.PlayOneShot(pickupSound);
         // sound goes higher pitch on more coins?
     }

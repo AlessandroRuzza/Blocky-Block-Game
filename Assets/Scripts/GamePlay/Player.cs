@@ -13,7 +13,7 @@ public class Player : MonoBehaviour
     public bool isImmortal;
     public event System.Action OnReset, OnDamage, OnDeath, OnObjectiveReached;
     public event System.Action<int> OnCoinPickup; 
-    public static int MAX_HEALTH=4, COIN_TARGET=5;
+    public static int MAX_HEALTH=3, COIN_TARGET=8;
     int coinCounter, health;
     public int hp { get { return health; } }
     public Vector3 resetPosition;
@@ -77,8 +77,7 @@ public class Player : MonoBehaviour
     void OnTriggerEnter2D(Collider2D triggerCollider){
         if(triggerCollider.tag == "Cube" && IsAlive() && !isImmortal){
             health--;
-            if(OnDamage != null)
-                OnDamage();
+            if(OnDamage != null) OnDamage();
             Destroy(triggerCollider.gameObject);
         }
         else if(triggerCollider.tag == "Coin" && coinCounter < COIN_TARGET){
