@@ -17,8 +17,12 @@ public class CoinSpawner : MonoBehaviour
 {
     public GameObject coinRoot;
     public Player playerRef;
+    float maxOffsetX, maxOffsetY;
     void Start()
     {  
+        // whole coin must be within the camera
+        maxOffsetX = CameraUtils.halfWidth - coinRoot.transform.localScale.x;
+        maxOffsetY = CameraUtils.halfHeight - coinRoot.transform.localScale.y;
         InvokeRepeating("SpawnCoin", 3, 2); // starts spawning 3s after start of round, then once every 2s
     }
 
@@ -34,15 +38,11 @@ public class CoinSpawner : MonoBehaviour
         GameObject coinHandle = Instantiate<GameObject>(coinRoot, spawnPoint, Quaternion.identity);
     }
 
-    Vector3 RandomSpawnOffset(){
-        // offset must be within the camera
-        float maxOffsetX = halfScreenWidth;
-        float maxOffsetY = halfScreenHeight;
-        
+    Vector3 RandomSpawnOffset(){        
         float offsetX = Random.Range(-maxOffsetX, maxOffsetX);
         float offsetY = Random.Range(-maxOffsetY, maxOffsetY);
 
-        Vector3 direction = new Vector3(offsetX, offsetY);
-        return direction;   
+        Vector3 position = new Vector3(offsetX, offsetY);
+        return position;   
     }
 }

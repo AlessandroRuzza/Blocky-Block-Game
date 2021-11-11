@@ -58,7 +58,6 @@ public class CubeSpawner : MonoBehaviour
 
         return cubeHandle;
     }
-
     Vector3 RandomSpawnOffset(float maxOffset){
         // 50% direction is left(-offset) or right(+offset)
         Vector3 direction = new Vector3(Random.Range(-maxOffset, maxOffset), 0);
