@@ -27,16 +27,19 @@ public class TutorialManager : MonoBehaviour
     public AudioClip pickupSound;
     int state=0;
     bool hasBeenDamaged=false;
+    Vector3 offsetToPlayer;
     void Start()
     {
         playerRef.OnDamage += OnFirstDamage;
         playerRef.OnCoinPickup += PickedCoin;
+        offsetToPlayer = showPlayerRef.transform.position - playerRef.transform.position;
         tutorialStartRef.SetTrigger("fadeIn");
     }
     void Update()
     {
-        if(state==0){       //only during first tutorial phase
-            HandleShowPlayerMovement();
+        if(state==0){
+            // keeps showPlayer in the same spot relative to Player
+            showPlayerRef.transform.position = playerRef.transform.position + offsetToPlayer;
             if(Input.GetKeyDown(KeyCode.Space))
                 Advance();
         }
@@ -75,14 +78,7 @@ public class TutorialManager : MonoBehaviour
         }
     }
     void HandleShowPlayerMovement(){
-        Vector3 move;
-        float speed = playerRef.speed;
-        if(Input.GetKey(KeyCode.LeftShift))
-            speed *= 2;
-        move = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        move = move.normalized*speed;
-        
-        showPlayerRef.transform.position += move*Time.deltaTime;
+              
     }
     IEnumerator CubeTestPassed(){
         warningTextRef.SetTrigger("fadeOut");
