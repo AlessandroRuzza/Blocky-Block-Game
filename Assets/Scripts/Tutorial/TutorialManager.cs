@@ -15,20 +15,12 @@ using System;
 *********/
 public class TutorialManager : MonoBehaviour
 {
-    Action<int> OnAdvance;
-    /* Possible arguments
-        
-        0:  Indicate HealthBar and Player
-        1:  Drop 1 cube for simulation
-            Pause and explain damage and show HealthBar
-        2:  Start/Continue practice round until death
-        3:  Show DeathScreen and finish tutorial   
-    */
+    
     public Player playerRef;
     public CubeSpawner tutorialSpawnerRef;
     public GameObject showPlayerRef;
-    public CanvasGroup tutorialStartRef, firstDamageGuideRef;
-    public Animator warningTextRef;
+    public CanvasGroup firstDamageGuideRef;
+    public Animator tutorialStartRef, warningTextRef;
     public Animator cubeTestPassedAnimator;
     public GameObject cube;
     GameObject testCube;
@@ -37,38 +29,50 @@ public class TutorialManager : MonoBehaviour
     void Start()
     {
         playerRef.OnDamage += OnFirstDamage;
-        OnAdvance += TutorialStart;
-        OnAdvance += CubeTest;
-        OnAdvance += StartSpawner;
         TutorialStart();
     }
     void Update()
     {
         if(state==0){
             showPlayerHandleMovement();
+            if(Input.GetKeyDown(KeyCode.Space))
+                Advance();
         }
         else if(state == 1 && !damageTutorialDone && testCube == null && !hasBeenDamaged){    // if testCube has not hit player
-                StartCoroutine("CubeTestPassed");
-                damageTutorialDone = true;
+            StartCoroutine("CubeTestPassed");
+            damageTutorialDone = true;
         }
-
-        if(Input.GetKeyDown(KeyCode.Space)){
-                state++;
-                print(state);
-                OnAdvance(state);
-            }
     }
-    void TutorialStart(int state=0){
-        if(state == 0){
-            tutorialStartRef.alpha = 1f;
-            tutorialStartRef.interactable = true;
-            tutorialStartRef.blocksRaycasts = true;
+    /* Possible States of tutorial
+        
+        0:  Indicate HealthBar and Player
+        1:  Drop 1 cube for simulation
+            Continue dropping round until damage
+            Pause and explain damage and show HealthBar
+        2:  Explain coins
+        3:  Show DeathScreen and finish tutorial   
+    */
+    void Advance(){
+        state++;
+        print(state);
+        switch(state){
+            case 1:
+                tutorialStartRef.SetTrigger("fadeOut");
+                warningTextRef.SetTrigger("fadeIn");
+                testCube = tutorialSpawnerRef.SpawnCube(false);
+                break;
+            case 2:
+                
+                break;
+            case 3:
+
+                break;
+            
+            default: break;
         }
-        else{
-            tutorialStartRef.alpha = 0f;
-            tutorialStartRef.interactable = false;
-            tutorialStartRef.blocksRaycasts = false;
-        }
+    }
+    void TutorialStart(){
+        tutorialStartRef.SetTrigger("fadeIn");
     }
     void showPlayerHandleMovement(){
         Vector3 move;
@@ -80,12 +84,6 @@ public class TutorialManager : MonoBehaviour
         
         showPlayerRef.transform.position += move*Time.deltaTime;
     }
-    void CubeTest(int state){
-        if(state == 1){    // on wrong state => exit function
-            warningTextRef.SetTrigger("fadeIn");
-            testCube = tutorialSpawnerRef.SpawnCube(false);
-        }
-    }
     IEnumerator CubeTestPassed(){
         warningTextRef.SetTrigger("fadeOut");
         StartCoroutine(TimeUtils.Pause());
@@ -95,9 +93,13 @@ public class TutorialManager : MonoBehaviour
         }
         cubeTestPassedAnimator.SetTrigger("fadeOut");
         StartCoroutine(TimeUtils.Resume());
+        ToggleSpawner(true);
     }
     void OnFirstDamage(){
+        warningTextRef.SetTrigger("fadeOut");
         if(!hasBeenDamaged){
+            playerRef.isImmortal=true;
+            ToggleSpawner(false);
             hasBeenDamaged = true;  
             playerRef.OnDamage -= OnFirstDamage;
             StartCoroutine(TimeUtils.Pause(0.5f));
@@ -115,10 +117,14 @@ public class TutorialManager : MonoBehaviour
         firstDamageGuideRef.interactable = false;
         firstDamageGuideRef.blocksRaycasts = false;
         StartCoroutine(TimeUtils.Resume());
+        Advance();
     }
-    void StartSpawner(int state){
-        if(state == 2 && !tutorialSpawnerRef.isSpawning){    // on wrong state => exit function
+    void ToggleSpawner(bool spawn){
+        if(spawn){    // on wrong state => exit function
             tutorialSpawnerRef.StartSpawner();
+        }
+        else{
+            tutorialSpawnerRef.StopSpawner();
         }
     }
 }

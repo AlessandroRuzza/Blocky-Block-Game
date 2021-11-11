@@ -10,6 +10,7 @@ struct screenBounds{
 public class Player : MonoBehaviour
 {
     public float speed;
+    public bool isImmortal;
     public event System.Action OnReset, OnDamage, OnDeath, OnObjectiveReached, OnCoinPickup; 
     public static int MAX_HEALTH=4, COIN_TARGET=5;
     int coinCounter, health;
@@ -17,6 +18,7 @@ public class Player : MonoBehaviour
     public Vector3 resetPosition;
     void Awake()
     {
+        isImmortal=false;
         coinCounter=0;
         health=MAX_HEALTH;
         screenBounds.x = CameraUtils.halfWidth + transform.localScale.x/2f;
@@ -71,7 +73,7 @@ public class Player : MonoBehaviour
             transform.position = new Vector3(transform.position.x, screenBounds.y);
     }
     void OnTriggerEnter2D(Collider2D triggerCollider){
-        if(triggerCollider.tag == "Cube" && IsAlive()){
+        if(triggerCollider.tag == "Cube" && IsAlive() && !isImmortal){
             health--;
             if(OnDamage != null)
                 OnDamage();
