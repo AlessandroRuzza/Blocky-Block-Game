@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,9 +19,9 @@ public class TutorialManager : MonoBehaviour
     
     public Player playerRef;
     public CubeSpawner tutorialSpawnerRef;
-    public GameObject showPlayerRef;
+    public GameObject showPlayerRef, coinRoot;
     public CanvasGroup firstDamageGuideRef;
-    public Animator tutorialStartRef, warningTextRef;
+    public Animator tutorialStartRef, warningTextRef, coinGuideRef;
     public Animator cubeTestPassedAnimator;
     public GameObject cube;
     GameObject testCube;
@@ -29,52 +30,50 @@ public class TutorialManager : MonoBehaviour
     void Start()
     {
         playerRef.OnDamage += OnFirstDamage;
-        TutorialStart();
+        playerRef.OnCoinPickup += PickedCoin;
+        tutorialStartRef.SetTrigger("fadeIn");
     }
     void Update()
     {
-        if(state==0){
-            showPlayerHandleMovement();
+        if(state==0){       //only during first tutorial phase
+            HandleShowPlayerMovement();
             if(Input.GetKeyDown(KeyCode.Space))
                 Advance();
         }
-        else if(state == 1 && !damageTutorialDone && testCube == null && !hasBeenDamaged){    // if testCube has not hit player
+        else if(state == 1 && testCube == null && !hasBeenDamaged){    // if testCube has not hit player
+            state++;
             StartCoroutine("CubeTestPassed");
-            damageTutorialDone = true;
         }
     }
     /* Possible States of tutorial
         
         0:  Indicate HealthBar and Player
         1:  Drop 1 cube for simulation
+            Praise if avoided, joke if damaged
             Continue dropping round until damage
             Pause and explain damage and show HealthBar
-        2:  Explain coins
-        3:  Show DeathScreen and finish tutorial   
+        2:  Show DeathScreen and finish tutorial   
+    OnDeath:Show DeathScreen and finish tutorial   
     */
     void Advance(){
         state++;
-        print(state);
         switch(state){
             case 1:
                 tutorialStartRef.SetTrigger("fadeOut");
                 warningTextRef.SetTrigger("fadeIn");
                 testCube = tutorialSpawnerRef.SpawnCube(false);
                 break;
-            case 2:
-                
-                break;
-            case 3:
-
+            case 2:  
+                coinGuideRef.SetTrigger("fadeIn");
+                Instantiate(coinRoot, Vector3.zero, Quaternion.identity);
                 break;
             
-            default: break;
+            default: 
+                Debug.Log("Index too high!");
+                break;
         }
     }
-    void TutorialStart(){
-        tutorialStartRef.SetTrigger("fadeIn");
-    }
-    void showPlayerHandleMovement(){
+    void HandleShowPlayerMovement(){
         Vector3 move;
         float speed = playerRef.speed;
         if(Input.GetKey(KeyCode.LeftShift))
@@ -97,10 +96,10 @@ public class TutorialManager : MonoBehaviour
     }
     void OnFirstDamage(){
         warningTextRef.SetTrigger("fadeOut");
-        if(!hasBeenDamaged){
+        if(!hasBeenDamaged && state==2){
             playerRef.isImmortal=true;
-            ToggleSpawner(false);
-            hasBeenDamaged = true;  
+            hasBeenDamaged = true; 
+            ToggleSpawner(false); 
             playerRef.OnDamage -= OnFirstDamage;
             StartCoroutine(TimeUtils.Pause(0.5f));
             firstDamageGuideRef.alpha = 1f;
@@ -108,11 +107,13 @@ public class TutorialManager : MonoBehaviour
             firstDamageGuideRef.blocksRaycasts = true;
             StartCoroutine("AfterFirstDamage");
         }
+        else{
+
+        }
     } 
     IEnumerator AfterFirstDamage(){
         while (!Input.GetKeyDown(KeyCode.Space))
             yield return null;
-        damageTutorialDone = true;
         firstDamageGuideRef.alpha = 0f;
         firstDamageGuideRef.interactable = false;
         firstDamageGuideRef.blocksRaycasts = false;
@@ -126,5 +127,8 @@ public class TutorialManager : MonoBehaviour
         else{
             tutorialSpawnerRef.StopSpawner();
         }
+    }
+    void PickedCoin(){
+        playerRef.Kill();
     }
 }

@@ -1531,6 +1531,8 @@ GameObject:
   - component: {fileID: 1157914688}
   - component: {fileID: 1157914690}
   - component: {fileID: 1157914689}
+  - component: {fileID: 1157914692}
+  - component: {fileID: 1157914691}
   m_Layer: 5
   m_Name: CoinGuide
   m_TagString: Untagged
@@ -1555,7 +1557,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 184.7}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1157914689
@@ -1598,6 +1600,37 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!225 &1157914691
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1157914687}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
+--- !u!95 &1157914692
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1157914687}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c76f4df2ed3f2b247b8749bed9a8aed8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 2
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1173604467
 GameObject:
   m_ObjectHideFlags: 0
@@ -2090,7 +2123,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 110
+    m_FontSize: 75
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 1
@@ -2684,9 +2717,11 @@ MonoBehaviour:
   playerRef: {fileID: 1033204062}
   tutorialSpawnerRef: {fileID: 1389065232}
   showPlayerRef: {fileID: 1245870363}
+  coinRoot: {fileID: 139587393391435583, guid: 846f9186af7ab0a41b0259c45eeae706, type: 3}
   firstDamageGuideRef: {fileID: 1587629376}
   tutorialStartRef: {fileID: 23433294}
   warningTextRef: {fileID: 1839072492}
+  coinGuideRef: {fileID: 1157914692}
   cubeTestPassedAnimator: {fileID: 1173604468}
   cube: {fileID: 5366287031959675183, guid: 458b79560ebe9e141a40e853adcbc1f7, type: 3}
 --- !u!1 &2074749464 stripped

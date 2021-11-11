@@ -102,4 +102,8 @@ public class Player : MonoBehaviour
             if(OnObjectiveReached != null) OnObjectiveReached();
         }
     }
+    public void Kill(){
+        health=0;
+        CheckDeath();
+    }
 }
