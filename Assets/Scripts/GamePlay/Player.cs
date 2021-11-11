@@ -18,6 +18,7 @@ public class Player : MonoBehaviour
     public Vector3 resetPosition;
     void Awake()
     {
+        resetPosition = transform.position;
         isImmortal=false;
         coinCounter=0;
         health=MAX_HEALTH;

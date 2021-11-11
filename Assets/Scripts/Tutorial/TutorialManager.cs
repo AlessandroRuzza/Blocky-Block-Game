@@ -21,12 +21,12 @@ public class TutorialManager : MonoBehaviour
     public CubeSpawner tutorialSpawnerRef;
     public GameObject showPlayerRef, coinRoot;
     public CanvasGroup firstDamageGuideRef;
-    public Animator tutorialStartRef, warningTextRef, coinGuideRef;
-    public Animator cubeTestPassedAnimator;
+    public Animator tutorialStartRef, warningTextRef, coinGuideRef, cubeTestPassedAnimator;
     public GameObject cube;
     GameObject testCube;
+    public AudioClip pickupSound;
     int state=0;
-    bool hasBeenDamaged=false, damageTutorialDone=false;
+    bool hasBeenDamaged=false;
     void Start()
     {
         playerRef.OnDamage += OnFirstDamage;
@@ -41,8 +41,8 @@ public class TutorialManager : MonoBehaviour
                 Advance();
         }
         else if(state == 1 && testCube == null && !hasBeenDamaged){    // if testCube has not hit player
-            state++;
             StartCoroutine("CubeTestPassed");
+            state++;
         }
     }
     /* Possible States of tutorial
@@ -52,8 +52,8 @@ public class TutorialManager : MonoBehaviour
             Praise if avoided, joke if damaged
             Continue dropping round until damage
             Pause and explain damage and show HealthBar
-        2:  Show DeathScreen and finish tutorial   
-    OnDeath:Show DeathScreen and finish tutorial   
+        2:  Start test round
+        3:  Show DeathScreen and finish tutorial   
     */
     void Advance(){
         state++;
@@ -63,7 +63,8 @@ public class TutorialManager : MonoBehaviour
                 warningTextRef.SetTrigger("fadeIn");
                 testCube = tutorialSpawnerRef.SpawnCube(false);
                 break;
-            case 2:  
+            case 2:
+            case 3:  
                 coinGuideRef.SetTrigger("fadeIn");
                 Instantiate(coinRoot, Vector3.zero, Quaternion.identity);
                 break;
@@ -96,7 +97,7 @@ public class TutorialManager : MonoBehaviour
     }
     void OnFirstDamage(){
         warningTextRef.SetTrigger("fadeOut");
-        if(!hasBeenDamaged && state==2){
+        if(!hasBeenDamaged){
             playerRef.isImmortal=true;
             hasBeenDamaged = true; 
             ToggleSpawner(false); 
@@ -107,9 +108,6 @@ public class TutorialManager : MonoBehaviour
             firstDamageGuideRef.blocksRaycasts = true;
             StartCoroutine("AfterFirstDamage");
         }
-        else{
-
-        }
     } 
     IEnumerator AfterFirstDamage(){
         while (!Input.GetKeyDown(KeyCode.Space))
@@ -117,6 +115,7 @@ public class TutorialManager : MonoBehaviour
         firstDamageGuideRef.alpha = 0f;
         firstDamageGuideRef.interactable = false;
         firstDamageGuideRef.blocksRaycasts = false;
+        playerRef.transform.position = playerRef.resetPosition;
         StartCoroutine(TimeUtils.Resume());
         Advance();
     }
@@ -129,6 +128,10 @@ public class TutorialManager : MonoBehaviour
         }
     }
     void PickedCoin(){
+        AudioSource audio = gameObject.AddComponent<AudioSource>();
+        audio.PlayOneShot(pickupSound);
         playerRef.Kill();
+        coinGuideRef.gameObject.SetActive(false);
+        playerRef.gameObject.SetActive(false); //hide player
     }
 }
