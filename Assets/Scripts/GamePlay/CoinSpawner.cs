@@ -28,8 +28,6 @@ public class CoinSpawner : MonoBehaviour
     void Start()
     {  
         coinsOnScreen = 0;
-        startWait = 3f;
-        coinSpawnRate = 2f;
         timeWaited = 0;
         playerRef = GameObject.FindObjectOfType<Player>();
         audio = gameObject.GetComponent<AudioSource>();

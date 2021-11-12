@@ -14,8 +14,8 @@ public class Player : MonoBehaviour
     public event System.Action OnReset, OnDamage, OnDeath, OnObjectiveReached;
     public event System.Action<int> OnCoinPickup; 
     public static int MAX_HEALTH=3, COIN_TARGET=8;
-    int coinCounter, health;
-    public int hp { get { return health; } }
+    int coinCounter;
+    public int health { get; private set; }
     public Vector3 resetPosition;
     void Awake()
     {
@@ -56,8 +56,8 @@ public class Player : MonoBehaviour
     }
     void HandleMovement(float speed){
         Vector3 move;
-        if(Input.GetKey(KeyCode.LeftShift))
-            speed *= 2;
+        //if(Input.GetKey(KeyCode.LeftShift))   //old sprint on shift
+        ///    speed *= 2;
         move = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         move = move.normalized*speed;
         

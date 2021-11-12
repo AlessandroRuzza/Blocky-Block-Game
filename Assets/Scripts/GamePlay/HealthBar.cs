@@ -24,7 +24,7 @@ public class HealthBar : MonoBehaviour
     }
     void Update()
     {
-        healthBar.value = playerRef.hp;
+        healthBar.value = playerRef.health;
     }
 
     void EmitDamage(){
