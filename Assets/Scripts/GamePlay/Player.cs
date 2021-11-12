@@ -83,7 +83,7 @@ public class Player : MonoBehaviour
         else if(triggerCollider.tag == "Coin" && coinCounter < COIN_TARGET){
             coinCounter++;
             if(OnCoinPickup != null) OnCoinPickup(coinCounter);
-            print("coin! " + coinCounter);
+            //print("coin! " + coinCounter);
             Destroy(triggerCollider.gameObject);
         }
     }

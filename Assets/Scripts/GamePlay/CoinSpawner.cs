@@ -16,43 +16,68 @@ using UnityEngine;
 public class CoinSpawner : MonoBehaviour
 {
     public GameObject coinRoot;
-    public GameObject healthBarRef;
-    public static int coinsOnScreen, MAX_COINS_ON_SCREEN=12;
+    public GameObject healthBarRef, coinClusterRef;
+    public int coinsOnScreen, MAX_COINS_ON_SCREEN=12;
     Player playerRef;
     new AudioSource audio;
     public AudioClip pickupSound;
     float maxOffsetX, maxOffsetY;
+    public float startWait, coinSpawnRate;
+    public bool isSpawning { get; private set; }    // forces use of StartSpawn() and StopSpawn() 
+    float timeWaited;
     void Start()
     {  
         coinsOnScreen = 0;
+        startWait = 3f;
+        coinSpawnRate = 2f;
+        timeWaited = 0;
         playerRef = GameObject.FindObjectOfType<Player>();
-        playerRef.OnCoinPickup += PlayPickupSound;
         audio = gameObject.GetComponent<AudioSource>();
+        playerRef.OnCoinPickup += PlayPickupSound;
         maxOffsetX = CameraUtils.halfWidth - coinRoot.transform.localScale.x;
         maxOffsetY = CameraUtils.halfHeight - 2; // will avoid coins overlapping CoinCounter
-        InvokeRepeating("SpawnCoin", 3, 2); // starts spawning 3s after start of round, then once every 2s
-        playerRef.OnDeath += CancelInvoke;
-        playerRef.OnObjectiveReached += CancelInvoke;
+        Invoke("StartSpawn", startWait);     //waits a bit after start of round
+        playerRef.OnDeath += StopSpawn;
+        playerRef.OnObjectiveReached += StopSpawn;
+    }
+    void Update(){
+        if(timeWaited > coinSpawnRate && isSpawning){   // timeWaited accumulates value until it's more than coinspawn
+            timeWaited = 0;     // resets timeWaited before next spawn
+            SpawnCoin();
+        }
+        timeWaited += Time.deltaTime;
     }
     void SpawnCoin(){
-        if(coinsOnScreen <= MAX_COINS_ON_SCREEN){
-            Vector3 spawnPoint = transform.position + RandomSpawnOffset();
-            // then check if spawnPoint is over UI element
-            Vector3 distanceToHealthBar = healthBarRef.transform.position - spawnPoint;
-            float minDistX=2, minDistY=5;
-            if(distanceToHealthBar.x < minDistX && distanceToHealthBar.y < minDistY){
-                spawnPoint += Vector3.left*minDistX;
-            }
-            // check if spawnPoint is too close to player
-            Vector3 distanceToPlayer = playerRef.transform.position - spawnPoint;
-            float minDistance = 10;
-            if(distanceToPlayer.magnitude < minDistance){
-                spawnPoint += distanceToPlayer.normalized * minDistance;
-            }
-
-            GameObject coinHandle = Instantiate<GameObject>(coinRoot, spawnPoint, Quaternion.identity);
-            coinsOnScreen++;
+        if(coinsOnScreen > MAX_COINS_ON_SCREEN){
+            Debug.LogWarning("Too many coins on screen", this);
+            return;
         }
+        Vector3 spawnPoint = transform.position + RandomSpawnOffset();
+
+        // then check if spawnPoint is over UI element
+        float minDistX, minDistY;
+        Vector3 distanceToHealthBar = healthBarRef.transform.position - spawnPoint;
+        minDistX=2; minDistY=5;
+        if(distanceToHealthBar.x < minDistX && distanceToHealthBar.y < minDistY){
+            SpawnCoin();    // repeat the process (hoping it will be further away)
+            return;         // quits after respawning coin
+        }
+        // check if spawnPoint is too close to player
+        Vector3 distanceToPlayer = playerRef.transform.position - spawnPoint;
+        minDistX=2; minDistY=3;
+        if(distanceToPlayer.x < minDistX && distanceToPlayer.y < minDistY){
+            SpawnCoin();    // repeat the process (hoping it will be further away)
+            return;         // quits after respawning coin
+        }
+
+        GameObject coinHandle = Instantiate<GameObject>(coinRoot, spawnPoint, Quaternion.identity, coinClusterRef.transform);
+        coinsOnScreen++;
+    }
+    public void StartSpawn(){
+        isSpawning=true;
+    }
+    public void StopSpawn(){
+        isSpawning=false;
     }
     Vector3 RandomSpawnOffset(){        
         float offsetX = Random.Range(-maxOffsetX, maxOffsetX);
