@@ -8,7 +8,7 @@ public class CubeSpawner : MonoBehaviour
     [SerializeField] GameObject cubeRoot;
     [SerializeField] Player playerRef;
     float maxOffset;
-    [SerializeField] float minScale=0.75f, maxScale=2.5f;
+    [SerializeField] float minScale=0.75f, maxScale=3f;
     [SerializeField] float minSpeed=0.75f, maxSpeed=2; 
     [SerializeField] float spawnPeriod=0.35f;
     public bool isSpawning=false;

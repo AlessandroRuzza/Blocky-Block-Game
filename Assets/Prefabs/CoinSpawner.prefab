@@ -47,7 +47,8 @@ MonoBehaviour:
   healthBarRef: {fileID: 0}
   coinClusterRef: {fileID: 0}
   coinsOnScreen: 0
-  MAX_COINS_ON_SCREEN: 12
+  MAX_COINS_ON_SCREEN: 4
+  playerRef: {fileID: 0}
   pickupSound: {fileID: 8300000, guid: 69f90a94b09fe0d4db9dc80a5379c8b3, type: 3}
   startWait: 3
-  coinSpawnRate: 2
+  coinSpawnRate: 4.5

@@ -23,8 +23,16 @@ public class SceneChanger : MonoBehaviour {
                 break;
         }
         
+        TimeUtils.EmptyActions();
+        EmptyActions();
         SceneManager.LoadScene(name);
         CameraUtils.SetScreenDimension();
+    }
+    public static void EmptyActions(){
+        OnPlay = null;
+        OnTutorial = null;
+        OnQuit = null;
+        OnTitleScreen = null;
     }
     public static void ReloadCurrentScene(){
         Scene currentScene = SceneManager.GetActiveScene();

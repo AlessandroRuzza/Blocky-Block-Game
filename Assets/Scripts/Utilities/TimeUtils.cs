@@ -17,6 +17,11 @@ public static class TimeUtils
         pauseDone = false;
         if(OnReset != null) OnReset();
     }
+    public static void EmptyActions(){
+        OnPause = null;
+        OnResume = null;
+        OnReset = null;
+    }
     public static void SetTimeScales(float timeScale, float fixedDeltaTime){
         startScale = timeScale;
         startFixedScale = fixedDeltaTime;

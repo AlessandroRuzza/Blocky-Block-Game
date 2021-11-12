@@ -46,7 +46,7 @@ MonoBehaviour:
   cubeRoot: {fileID: 5366287031959675183, guid: 458b79560ebe9e141a40e853adcbc1f7, type: 3}
   playerRef: {fileID: 0}
   minScale: 0.8
-  maxScale: 2.5
+  maxScale: 3
   minSpeed: 0.75
   maxSpeed: 2
   spawnPeriod: 0.5

@@ -26,7 +26,7 @@ public class Player : MonoBehaviour
         coinCounter=0;
         isImmortal=false;
         health=MAX_HEALTH;
-        screenBounds.x = CameraUtils.halfWidth + transform.localScale.x/2f;
+        screenBounds.x = CameraUtils.halfWidth ;  //to revert to old exploitable loop, add:   + transform.localScale.x/2f;
         screenBounds.y = CameraUtils.halfHeight - transform.localScale.y/2f;
         TimeUtils.OnReset += Reset;
     }

@@ -2100,6 +2100,10 @@ PrefabInstance:
       propertyPath: playerRef
       value: 
       objectReference: {fileID: 786797296}
+    - target: {fileID: 1601580875264427641, guid: aee2ec2e5bd3050479cc65f3b193d2d9, type: 3}
+      propertyPath: spawnPeriod
+      value: 0.35
+      objectReference: {fileID: 0}
     - target: {fileID: 1601580875264427642, guid: aee2ec2e5bd3050479cc65f3b193d2d9, type: 3}
       propertyPath: m_Name
       value: CubeSpawner
