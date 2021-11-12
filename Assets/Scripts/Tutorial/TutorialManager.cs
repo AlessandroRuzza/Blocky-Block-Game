@@ -17,14 +17,14 @@ using System;
 public class TutorialManager : MonoBehaviour
 {
     
-    public Player playerRef;
-    public CubeSpawner tutorialSpawnerRef;
-    public GameObject showPlayerRef, coinRoot;
-    public CanvasGroup firstDamageGuideRef;
-    public Animator tutorialStartRef, warningTextRef, coinGuideRef, cubeTestPassedAnimator;
-    public GameObject cube;
+    [SerializeField] Player playerRef;
+    [SerializeField] CubeSpawner tutorialSpawnerRef;
+    [SerializeField] GameObject showPlayerRef, coinRoot;
+    [SerializeField] CanvasGroup firstDamageGuideRef;
+    [SerializeField] Animator tutorialStartRef, warningTextRef, coinGuideRef, cubeTestPassedAnimator;
+    [SerializeField] GameObject cube;
     GameObject testCube;
-    public AudioClip pickupSound;
+    [SerializeField] AudioClip pickupSound;
     int state=0;
     bool hasBeenDamaged=false;
     Vector3 offsetToPlayer;
@@ -77,9 +77,6 @@ public class TutorialManager : MonoBehaviour
                 break;
         }
     }
-    void HandleShowPlayerMovement(){
-              
-    }
     IEnumerator CubeTestPassed(){
         warningTextRef.SetTrigger("fadeOut");
         StartCoroutine(TimeUtils.Pause());
@@ -111,7 +108,7 @@ public class TutorialManager : MonoBehaviour
         firstDamageGuideRef.alpha = 0f;
         firstDamageGuideRef.interactable = false;
         firstDamageGuideRef.blocksRaycasts = false;
-        playerRef.transform.position = playerRef.resetPosition;
+        playerRef.Reset();
         StartCoroutine(TimeUtils.Resume());
         Advance();
     }

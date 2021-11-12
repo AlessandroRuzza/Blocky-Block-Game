@@ -5,16 +5,15 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
-    Player playerRef;
+    [SerializeField] Player playerRef;
     Slider healthBar;
     new AudioSource audio;
-    public AudioClip damageSound; 
-    public ParticleSystem damageEmitter;
+    [SerializeField] AudioClip damageSound; 
+    [SerializeField] ParticleSystem damageEmitter;
     void Start()
     {
         healthBar = gameObject.GetComponent<Slider>();
         audio = gameObject.GetComponent<AudioSource>();
-        playerRef = FindObjectOfType<Player>();
         playerRef.OnDamage += EmitDamage;
         playerRef.OnDamage += PlayDamageSound;
         healthBar.maxValue = Player.MAX_HEALTH;

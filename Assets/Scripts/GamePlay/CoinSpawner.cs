@@ -3,35 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /*******************        \\ is DONE
-* COIN SPAWNER:  goals
-*   \\- Generate coins around the screen
-*   - Don't let coins collide with UI elements
-* 
-* Actual COIN: goals
+* Actual COIN: ideas
+*   \\- Little ding sound on pickup
 *   - Make nice particle effects (shiny)
-*   - Little ding sound on pickup
 *   - Add a rotation effect (might look bad)
 * 
 ****************************/
 public class CoinSpawner : MonoBehaviour
 {
-    public GameObject coinRoot;
-    public GameObject healthBarRef, coinClusterRef;
-    public int coinsOnScreen, MAX_COINS_ON_SCREEN=12;
-    Player playerRef;
+    [SerializeField] GameObject coinRoot;
+    [SerializeField] GameObject healthBarRef, coinClusterRef;
+    public int coinsOnScreen=0, MAX_COINS_ON_SCREEN=12;
+    [SerializeField] Player playerRef;
     new AudioSource audio;
-    public AudioClip pickupSound;
+    [SerializeField] AudioClip pickupSound;
     float maxOffsetX, maxOffsetY;
-    public float startWait, coinSpawnRate;
+    [SerializeField] float startWait=3f, coinSpawnRate=2f;
     public bool isSpawning { get; private set; }    // forces use of StartSpawn() and StopSpawn() 
-    float timeWaited;
+    float timeWaited=0;
     void Start()
     {  
-        coinsOnScreen = 0;
-        startWait = 3f;
-        coinSpawnRate = 2f;
-        timeWaited = 0;
-        playerRef = GameObject.FindObjectOfType<Player>();
         audio = gameObject.GetComponent<AudioSource>();
         playerRef.OnCoinPickup += PlayPickupSound;
         maxOffsetX = CameraUtils.halfWidth - coinRoot.transform.localScale.x;

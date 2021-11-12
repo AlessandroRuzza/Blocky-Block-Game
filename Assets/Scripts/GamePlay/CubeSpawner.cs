@@ -5,18 +5,16 @@ using UnityEngine.SceneManagement;
 
 public class CubeSpawner : MonoBehaviour
 {
-    public GameObject cubeRoot;
-    Player playerRef;
-    public float minScale, maxScale, maxOffset, spawnPeriod, minSpeed, maxSpeed;
+    [SerializeField] GameObject cubeRoot;
+    [SerializeField] Player playerRef;
+    float maxOffset;
+    [SerializeField] float minScale=0.75f, maxScale=2.5f;
+    [SerializeField] float minSpeed=0.75f, maxSpeed=2; 
+    [SerializeField] float spawnPeriod=0.35f;
     public bool isSpawning=false;
     void Start()
     {
         playerRef = FindObjectOfType<Player>();
-        minScale = 0.75f;
-        maxScale = 2.5f;
-        spawnPeriod = 0.35f;
-        minSpeed = 0.75f;
-        maxSpeed = 2;
         maxOffset = CameraUtils.halfWidth - minScale/2f; 
         if(SceneManager.GetActiveScene().name == "GamePlay")
             StartSpawner();
@@ -36,7 +34,7 @@ public class CubeSpawner : MonoBehaviour
         isSpawning=false;
     }
     IEnumerator SpawnCubes(){
-        for(int cubeSpawned=0; playerRef.IsAlive(); cubeSpawned++){
+        for(int cubeSpawned=0; playerRef.isAlive; cubeSpawned++){
             SpawnCube();
             yield return new WaitForSeconds(spawnPeriod);
         }

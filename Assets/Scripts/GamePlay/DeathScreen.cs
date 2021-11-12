@@ -5,11 +5,10 @@ using UnityEngine.UI;
 
 public class DeathScreen : MonoBehaviour
 {
-    Player playerRef;
-    public GameObject healthBar;
+    [SerializeField] Player playerRef;
+    [SerializeField] GameObject healthBar;
     void Start()
     {
-        playerRef = FindObjectOfType<Player>();
         playerRef.OnDeath += Show;
         Hide();
     }

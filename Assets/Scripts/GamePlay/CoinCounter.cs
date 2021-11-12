@@ -5,12 +5,11 @@ using UnityEngine.UI;
 
 public class CoinCounter : MonoBehaviour
 {
-    Player playerRef;
-    public GameObject coinUIRoot;
+    [SerializeField] Player playerRef;
+    [SerializeField] GameObject coinUIRoot;
     GameObject[] coins;
     void Start()
     {
-        playerRef = GameObject.FindObjectOfType<Player>();
         coins = new GameObject[Player.COIN_TARGET];
         AddCoinsToScreen();
         playerRef.OnCoinPickup += FillCoin;

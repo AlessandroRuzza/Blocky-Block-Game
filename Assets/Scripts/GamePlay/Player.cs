@@ -9,19 +9,22 @@ struct screenBounds{
 }
 public class Player : MonoBehaviour
 {
-    public float speed;
-    public bool isImmortal;
-    public event System.Action OnReset, OnDamage, OnDeath, OnObjectiveReached;
+    [SerializeField] float speed;
+    public bool isImmortal=false;
+    public event System.Action OnDamage, OnDeath, OnObjectiveReached;
     public event System.Action<int> OnCoinPickup; 
     public static int MAX_HEALTH=3, COIN_TARGET=8;
-    int coinCounter;
+    [SerializeField] int coinCounter=0;
     public int health { get; private set; }
+    public bool isAlive {
+        get{ return health>0; }
+    }
     public Vector3 resetPosition;
     void Awake()
     {
         resetPosition = transform.position;
-        isImmortal=false;
         coinCounter=0;
+        isImmortal=false;
         health=MAX_HEALTH;
         screenBounds.x = CameraUtils.halfWidth + transform.localScale.x/2f;
         screenBounds.y = CameraUtils.halfHeight - transform.localScale.y/2f;
@@ -30,8 +33,7 @@ public class Player : MonoBehaviour
     public void Reset(){                        
         coinCounter=0;
         health=MAX_HEALTH;
-        if(OnReset != null)
-            OnReset();
+        transform.position = resetPosition;
     }
     void Update()
     {
@@ -42,13 +44,8 @@ public class Player : MonoBehaviour
             CheckDeath();
             CheckObjectiveComplete();
         }
-        // reset on R pressed   ------------  TEMP DEBUG
-        if(Input.GetKeyDown(KeyCode.R)){
-            SceneChanger.ReloadCurrentScene();  
-        }
     }
     void OnDestroy(){
-        OnReset=null;
         OnDamage=null;
         OnDeath=null;
         OnObjectiveReached=null;
@@ -75,7 +72,7 @@ public class Player : MonoBehaviour
             transform.position = new Vector3(transform.position.x, screenBounds.y);
     }
     void OnTriggerEnter2D(Collider2D triggerCollider){
-        if(triggerCollider.tag == "Cube" && IsAlive() && !isImmortal){
+        if(triggerCollider.tag == "Cube" && isAlive && !isImmortal){
             health--;
             if(OnDamage != null) OnDamage();
             Destroy(triggerCollider.gameObject);
@@ -87,17 +84,14 @@ public class Player : MonoBehaviour
             Destroy(triggerCollider.gameObject);
         }
     }
-    public bool IsAlive(){
-        return health>0;
-    }
     void CheckDeath(){
-        if(!IsAlive()){
+        if(!isAlive){
             StartCoroutine(TimeUtils.Pause());
             if(OnDeath != null) OnDeath();
         }
     }
     void CheckObjectiveComplete(){
-        if(coinCounter >= COIN_TARGET && !TimeUtils.isPaused && IsAlive()){
+        if(coinCounter >= COIN_TARGET && !TimeUtils.isPaused && isAlive){
             //print("CONGRATS!");
             isImmortal = true;
             if(OnObjectiveReached != null) OnObjectiveReached();

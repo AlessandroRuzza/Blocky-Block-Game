@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class ObjectiveCompleteScreen : MonoBehaviour
 {
-    Player playerRef;
-    public GameObject healthBar;
+    [SerializeField] Player playerRef;
+    [SerializeField] GameObject healthBar;
     void Start()
     {
-        playerRef = FindObjectOfType<Player>();
         playerRef.OnObjectiveReached += Show;
         Hide();
     }
