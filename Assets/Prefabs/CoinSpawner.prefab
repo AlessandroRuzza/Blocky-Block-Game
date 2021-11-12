@@ -44,4 +44,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coinRoot: {fileID: 139587393391435583, guid: 846f9186af7ab0a41b0259c45eeae706, type: 3}
+  healthBarRef: {fileID: 0}
+  coinClusterRef: {fileID: 0}
+  coinsOnScreen: 0
+  MAX_COINS_ON_SCREEN: 12
   pickupSound: {fileID: 8300000, guid: 69f90a94b09fe0d4db9dc80a5379c8b3, type: 3}
+  startWait: 3
+  coinSpawnRate: 2

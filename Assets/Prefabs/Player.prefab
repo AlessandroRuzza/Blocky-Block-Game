@@ -97,7 +97,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e80b304c1ea9dd94598255ef861f1970, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 12
+  speed: 17
+  isImmortal: 0
   resetPosition: {x: 0, y: -11.77, z: 0}
 --- !u!70 &3231709053213128447
 CapsuleCollider2D:
