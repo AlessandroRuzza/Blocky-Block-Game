@@ -58,14 +58,14 @@ public class CoinSpawner : MonoBehaviour
         float minDistX, minDistY;
         Vector3 distanceToHealthBar = healthBarRef.transform.position - spawnPoint;
         minDistX=2; minDistY=5;
-        if(distanceToHealthBar.x < minDistX && distanceToHealthBar.y < minDistY){
+        if(Mathf.Abs(distanceToHealthBar.x) < minDistX && Mathf.Abs(distanceToHealthBar.y) < minDistY){
             SpawnCoin();    // repeat the process (hoping it will be further away)
             return;         // quits after respawning coin
         }
         // check if spawnPoint is too close to player
         Vector3 distanceToPlayer = playerRef.transform.position - spawnPoint;
         minDistX=2; minDistY=3;
-        if(distanceToPlayer.x < minDistX && distanceToPlayer.y < minDistY){
+        if(Mathf.Abs(distanceToPlayer.x) < minDistX && Mathf.Abs(distanceToPlayer.y) < minDistY){
             SpawnCoin();    // repeat the process (hoping it will be further away)
             return;         // quits after respawning coin
         }

@@ -7,14 +7,16 @@ public class CubeSpawner : MonoBehaviour
 {
     public GameObject cubeRoot;
     Player playerRef;
-    public float minScale, maxScale, maxOffset, spawnPeriod;
+    public float minScale, maxScale, maxOffset, spawnPeriod, minSpeed, maxSpeed;
     public bool isSpawning=false;
     void Start()
     {
         playerRef = FindObjectOfType<Player>();
         minScale = 0.75f;
         maxScale = 2.5f;
-        spawnPeriod = 0.5f;
+        spawnPeriod = 0.35f;
+        minSpeed = 0.75f;
+        maxSpeed = 2;
         maxOffset = CameraUtils.halfWidth - minScale/2f; 
         if(SceneManager.GetActiveScene().name == "GamePlay")
             StartSpawner();
@@ -45,11 +47,14 @@ public class CubeSpawner : MonoBehaviour
         if(randomCube){
             Vector3 cubeScale = RandomScale(minScale, maxScale);
             Vector3 spawnPoint = transform.position + RandomSpawnOffset(maxOffset-cubeScale.x/2f);
-            float randomSpeed = Random.Range(0.5f, 1.5f);
+            float randomSpeed = Random.Range(minSpeed, maxSpeed);
 
             cubeHandle = Instantiate<GameObject>(cubeRoot, spawnPoint, cubeRotation);
             cubeHandle.transform.localScale = cubeScale;
             cubeHandle.GetComponent<Rigidbody2D>().gravityScale = randomSpeed;
+            if(randomSpeed > maxSpeed*3/4){
+                cubeHandle.GetComponent<Rigidbody2D>().velocity = Vector2.down*randomSpeed/2;
+            }
         }
         else{
             cubeHandle = Instantiate<GameObject>(cubeRoot, transform.position, cubeRotation);
