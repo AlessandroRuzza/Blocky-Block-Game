@@ -54,11 +54,15 @@ public class Player : MonoBehaviour
     }
     void HandleMovement(float speed){
         Vector3 move;
-        if(Input.touchCount > 0 && Input.touchSupported){
+        if(Input.touchCount > 0 && Input.touchSupported){  
             move = Input.GetTouch(0).deltaPosition;
-            //move = move.normalized*speed;
             transform.Translate(move*Time.deltaTime);
-        }        
+        } 
+        else if(Input.touchSupported == false){          // debug setting for movement on PC
+            move = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            move = move.normalized*speed;
+            transform.Translate(move*Time.deltaTime);
+        }  
     }
     void CheckLoopAround(){
         if(transform.position.x < -screenBounds.x)

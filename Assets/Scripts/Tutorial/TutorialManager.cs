@@ -21,12 +21,12 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] CubeSpawner tutorialSpawnerRef;
     [SerializeField] GameObject showPlayerRef, coinRoot;
     [SerializeField] CanvasGroup firstDamageGuideRef;
-    [SerializeField] Animator tutorialStartRef, warningTextRef, coinGuideRef, cubeTestPassedAnimator;
+    [SerializeField] Animator advanceGuideRef, tutorialStartRef, warningTextRef, coinGuideRef, cubeTestPassedAnimator;
     [SerializeField] GameObject cube;
     GameObject testCube;
     [SerializeField] AudioClip pickupSound;
     int state=0;
-    bool hasBeenDamaged=false;
+    bool hasBeenDamaged=false, endDamageTutorial=false, continueSpawn=false, cubeTestPassed=false;
     Vector3 offsetToPlayer;
     void Start()
     {
@@ -34,18 +34,17 @@ public class TutorialManager : MonoBehaviour
         playerRef.OnCoinPickup += PickedCoin;
         offsetToPlayer = showPlayerRef.transform.position - playerRef.transform.position;
         tutorialStartRef.SetTrigger("fadeIn");
+        Invoke("AdvanceGuideFadeIn", 2); // fades in after 2s
     }
     void Update()
     {
         if(state==0){
             // keeps showPlayer in the same spot relative to Player
             showPlayerRef.transform.position = playerRef.transform.position + offsetToPlayer;
-            if(Input.GetKeyDown(KeyCode.Space))
-                Advance();
         }
-        else if(state == 1 && testCube == null && !hasBeenDamaged){    // if testCube has not hit player
+        else if(state == 1 && testCube == null && !hasBeenDamaged && !cubeTestPassed){    // if testCube has not hit player
             StartCoroutine("CubeTestPassed");
-            state++;
+            cubeTestPassed=true;
         }
     }
     /* Possible States of tutorial
@@ -58,22 +57,31 @@ public class TutorialManager : MonoBehaviour
         2:  Start test round
         3:  Show DeathScreen and finish tutorial   
     */
-    void Advance(){
+    void AdvanceGuideFade(string trigger="fadeIn"){
+        advanceGuideRef.SetTrigger(trigger);
+    }
+    void AdvanceGuideFadeIn(){      // just for the initial Invoke
+        AdvanceGuideFade("fadeIn");
+    }
+    public void Advance(){
         state++;
+        Debug.Log("state: " + state);
         switch(state){
             case 1:
+                AdvanceGuideFade("fadeOut");
                 tutorialStartRef.SetTrigger("fadeOut");
                 warningTextRef.SetTrigger("fadeIn");
                 testCube = tutorialSpawnerRef.SpawnCube(false);
                 break;
-            case 2:
-            case 3:  
+            case 2: break;
+            case 3: 
+                AdvanceGuideFade("fadeOut"); 
                 coinGuideRef.SetTrigger("fadeIn");
                 Instantiate(coinRoot, Vector3.zero, Quaternion.identity);
                 break;
             
             default: 
-                Debug.Log("Index too high!");
+                Debug.Log("State index too high!");
                 break;
         }
     }
@@ -81,7 +89,8 @@ public class TutorialManager : MonoBehaviour
         warningTextRef.SetTrigger("fadeOut");
         StartCoroutine(TimeUtils.Pause());
         cubeTestPassedAnimator.SetTrigger("fadeIn");
-        while(!Input.GetKeyDown(KeyCode.Space)){   
+        AdvanceGuideFade("fadeIn");
+        while(!continueSpawn){   
             yield return null;
         }
         cubeTestPassedAnimator.SetTrigger("fadeOut");
@@ -89,8 +98,9 @@ public class TutorialManager : MonoBehaviour
         ToggleSpawner(true);
     }
     void OnFirstDamage(){
-        warningTextRef.SetTrigger("fadeOut");
         if(!hasBeenDamaged){
+            warningTextRef.SetTrigger("fadeOut");
+            AdvanceGuideFade("fadeIn");
             playerRef.isImmortal=true;
             hasBeenDamaged = true; 
             ToggleSpawner(false); 
@@ -102,15 +112,20 @@ public class TutorialManager : MonoBehaviour
             StartCoroutine("AfterFirstDamage");
         }
     } 
+    public void ConditionalAdvance(){
+        if(hasBeenDamaged)
+            endDamageTutorial=true;
+        else if(cubeTestPassed)
+            continueSpawn=true;
+    }
     IEnumerator AfterFirstDamage(){
-        while (!Input.GetKeyDown(KeyCode.Space))
+        while (!endDamageTutorial)
             yield return null;
         firstDamageGuideRef.alpha = 0f;
         firstDamageGuideRef.interactable = false;
         firstDamageGuideRef.blocksRaycasts = false;
         playerRef.Reset();
         StartCoroutine(TimeUtils.Resume());
-        Advance();
     }
     void ToggleSpawner(bool spawn){
         if(spawn){    // on wrong state => exit function
