@@ -22,6 +22,7 @@ public class Player : MonoBehaviour
     public Vector3 resetPosition;
     void Awake()
     {
+        Input.multiTouchEnabled = false;
         resetPosition = transform.position;
         coinCounter=0;
         isImmortal=false;
@@ -53,12 +54,11 @@ public class Player : MonoBehaviour
     }
     void HandleMovement(float speed){
         Vector3 move;
-        //if(Input.GetKey(KeyCode.LeftShift))   //old sprint on shift
-        ///    speed *= 2;
-        move = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        move = move.normalized*speed;
-        
-        transform.position += move*Time.deltaTime;
+        if(Input.touchCount > 0 && Input.touchSupported){
+            move = Input.GetTouch(0).deltaPosition;
+            //move = move.normalized*speed;
+            transform.Translate(move*Time.deltaTime);
+        }        
     }
     void CheckLoopAround(){
         if(transform.position.x < -screenBounds.x)
@@ -80,7 +80,6 @@ public class Player : MonoBehaviour
         else if(triggerCollider.tag == "Coin" && coinCounter < COIN_TARGET){
             coinCounter++;
             if(OnCoinPickup != null) OnCoinPickup(coinCounter);
-            //print("coin! " + coinCounter);
             Destroy(triggerCollider.gameObject);
         }
     }
@@ -92,7 +91,6 @@ public class Player : MonoBehaviour
     }
     void CheckObjectiveComplete(){
         if(coinCounter >= COIN_TARGET && !TimeUtils.isPaused && isAlive){
-            //print("CONGRATS!");
             isImmortal = true;
             if(OnObjectiveReached != null) OnObjectiveReached();
         }
