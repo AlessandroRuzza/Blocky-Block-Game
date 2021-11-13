@@ -53,12 +53,10 @@ public class Player : MonoBehaviour
     }
     void HandleMovement(float speed){
         Vector3 move;
-        //if(Input.GetKey(KeyCode.LeftShift))   //old sprint on shift
-        ///    speed *= 2;
         move = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         move = move.normalized*speed;
         
-        transform.position += move*Time.deltaTime;
+        transform.Translate(move*Time.deltaTime);
     }
     void CheckLoopAround(){
         if(transform.position.x < -screenBounds.x)

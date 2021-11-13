@@ -21,7 +21,7 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] CubeSpawner tutorialSpawnerRef;
     [SerializeField] GameObject showPlayerRef, coinRoot;
     [SerializeField] CanvasGroup firstDamageGuideRef;
-    [SerializeField] Animator tutorialStartRef, warningTextRef, coinGuideRef, cubeTestPassedAnimator;
+    [SerializeField] Animator advanceGuideRef, tutorialStartRef, warningTextRef, coinGuideRef, cubeTestPassedAnimator;
     [SerializeField] GameObject cube;
     GameObject testCube;
     [SerializeField] AudioClip pickupSound;
@@ -34,6 +34,7 @@ public class TutorialManager : MonoBehaviour
         playerRef.OnCoinPickup += PickedCoin;
         offsetToPlayer = showPlayerRef.transform.position - playerRef.transform.position;
         tutorialStartRef.SetTrigger("fadeIn");
+        Invoke("AdvanceGuideFadeIn", 2);
     }
     void Update()
     {
@@ -48,26 +49,24 @@ public class TutorialManager : MonoBehaviour
             state++;
         }
     }
-    /* Possible States of tutorial
-        
-        0:  Indicate HealthBar and Player
-        1:  Drop 1 cube for simulation
-            Praise if avoided, joke if damaged
-            Continue dropping round until damage
-            Pause and explain damage and show HealthBar
-        2:  Start test round
-        3:  Show DeathScreen and finish tutorial   
-    */
+    void AdvanceGuideFadeIn(){
+        advanceGuideRef.SetTrigger("fadeIn");
+    }
+    void AdvanceGuideFadeOut(){
+        advanceGuideRef.SetTrigger("fadeOut");
+    }
     void Advance(){
         state++;
         switch(state){
             case 1:
+                AdvanceGuideFadeOut();
                 tutorialStartRef.SetTrigger("fadeOut");
                 warningTextRef.SetTrigger("fadeIn");
                 testCube = tutorialSpawnerRef.SpawnCube(false);
                 break;
             case 2:
             case 3:  
+                AdvanceGuideFadeOut();
                 coinGuideRef.SetTrigger("fadeIn");
                 Instantiate(coinRoot, Vector3.zero, Quaternion.identity);
                 break;
@@ -78,6 +77,7 @@ public class TutorialManager : MonoBehaviour
         }
     }
     IEnumerator CubeTestPassed(){
+        AdvanceGuideFadeIn();
         warningTextRef.SetTrigger("fadeOut");
         StartCoroutine(TimeUtils.Pause());
         cubeTestPassedAnimator.SetTrigger("fadeIn");
@@ -85,6 +85,7 @@ public class TutorialManager : MonoBehaviour
             yield return null;
         }
         cubeTestPassedAnimator.SetTrigger("fadeOut");
+        AdvanceGuideFadeOut();
         StartCoroutine(TimeUtils.Resume());
         ToggleSpawner(true);
     }
@@ -103,6 +104,7 @@ public class TutorialManager : MonoBehaviour
         }
     } 
     IEnumerator AfterFirstDamage(){
+        AdvanceGuideFadeIn();
         while (!Input.GetKeyDown(KeyCode.Space))
             yield return null;
         firstDamageGuideRef.alpha = 0f;

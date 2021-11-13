@@ -205,8 +205,10 @@ GameObject:
   - component: {fileID: 58291257}
   - component: {fileID: 58291256}
   - component: {fileID: 58291255}
+  - component: {fileID: 58291259}
+  - component: {fileID: 58291258}
   m_Layer: 5
-  m_Name: Guide
+  m_Name: AdvanceGuide
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -296,6 +298,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 58291253}
   m_CullTransparentMesh: 1
+--- !u!225 &58291258
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58291253}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
+--- !u!95 &58291259
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58291253}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c76f4df2ed3f2b247b8749bed9a8aed8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 2
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &127262624
 GameObject:
   m_ObjectHideFlags: 0
@@ -2889,6 +2922,7 @@ MonoBehaviour:
   showPlayerRef: {fileID: 1245870363}
   coinRoot: {fileID: 139587393391435583, guid: 846f9186af7ab0a41b0259c45eeae706, type: 3}
   firstDamageGuideRef: {fileID: 1587629376}
+  advanceGuideRef: {fileID: 58291259}
   tutorialStartRef: {fileID: 23433294}
   warningTextRef: {fileID: 1839072492}
   coinGuideRef: {fileID: 1157914692}
