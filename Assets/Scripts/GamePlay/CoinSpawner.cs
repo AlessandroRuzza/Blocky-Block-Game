@@ -79,7 +79,9 @@ public class CoinSpawner : MonoBehaviour
     }
     public void PlayPickupSound(int coinCount){
         coinsOnScreen--;
-        audio.PlayOneShot(pickupSound);
-        // sound goes higher pitch on more coins?
+        audio.Play();
+        // sound goes higher pitch on more coins
+        float pitchStep = 0.02f;
+        audio.pitch += pitchStep;
     }
 }
